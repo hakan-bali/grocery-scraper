@@ -30,19 +30,27 @@ public class Main {
           .results(new ArrayList<>())
           .build();
 
+      String productPageUrl;
+      Document docProd;
+      String priceRawText;
+      String priceText;
+      String productDescription;
+      String energy = "";
+
       for (Element product : products) {
-        String productPageUrl = product.getElementsByTag("a").first().attr("abs:href");
-        Document docProd = Jsoup.connect(productPageUrl).get();
-        String priceRawText = docProd.getElementsByClass("pricePerUnit").text();
-        String priceText = priceRawText.substring(1, priceRawText.indexOf("/"));
-        String productDescription = docProd.getElementsByClass("productText").get(0).text();
-        String energy = "";
+        productPageUrl = product.getElementsByTag("a").first().attr("abs:href");
+        docProd = Jsoup.connect(productPageUrl).get();
+        priceRawText = docProd.getElementsByClass("pricePerUnit").text();
+        priceText = priceRawText.substring(1, priceRawText.indexOf("/"));
+        productDescription = docProd.getElementsByClass("productText").get(0).text();
+        energy = "";
         if (!docProd.getElementsByTag("td").isEmpty()) {
           energy = docProd.getElementsByTag("td").get(2).text();
         }
 
         price = Double.parseDouble(priceText);
         gross += price;
+        kcal = 0;
         kcalIndex = energy.indexOf("kcal");
         if (kcalIndex > 0) {
           kcal = Integer.parseInt(energy.substring(0, kcalIndex));
