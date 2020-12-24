@@ -1,9 +1,13 @@
 package com.arkhelais.groceryscraper.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 // TODO : Revert Delombok operation when functionality ended.
 public class Product {
 
   private String title;
+  @JsonInclude(Include.NON_NULL)
   private Integer kcal_per_100g;
   private Double unit_price;
   private String description;

@@ -20,8 +20,8 @@ public class Main {
   public static void main(String[] args) {
     Double price;
     Double gross = 0.0;
-    int kcal = 0;
-    int kcalIndex;
+    Integer kcal = 0;
+    Integer kcalIndex;
 
     try {
       Document doc = Jsoup.connect(DEFAULT_URL).get();
@@ -50,7 +50,7 @@ public class Main {
 
         price = Double.parseDouble(priceText);
         gross += price;
-        kcal = 0;
+        kcal = null;
         kcalIndex = energy.indexOf("kcal");
         if (kcalIndex > 0) {
           kcal = Integer.parseInt(energy.substring(0, kcalIndex));
