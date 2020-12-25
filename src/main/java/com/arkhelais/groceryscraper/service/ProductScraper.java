@@ -7,7 +7,6 @@ import static com.arkhelais.groceryscraper.util.Constants.VAT;
 import com.arkhelais.groceryscraper.dto.Output;
 import com.arkhelais.groceryscraper.dto.Product;
 import com.arkhelais.groceryscraper.dto.Total;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import org.jsoup.select.Elements;
 public class ProductScraper {
   private final Output output;
   private final EnergyHandler energyHandler;
-  private String categoryPageUrl = DEFAULT_URL;
 
   public ProductScraper() {
     output = Output.builder().results(new ArrayList<>()).build();
@@ -30,25 +28,17 @@ public class ProductScraper {
     energyHandlerTwo.setNext(energyHandlerThree);
   }
 
-  public void setCategoryPageUrl(String categoryPageUrl) {
-    this.categoryPageUrl = categoryPageUrl;
-  }
-
   public String extractProductsAsJson() {
-    String result = "No product found";
     try {
-      Elements products = Jsoup.connect(categoryPageUrl).get().getElementsByClass(CSS_PRODUCT);
+      Elements products = Jsoup.connect(DEFAULT_URL).get().getElementsByClass(CSS_PRODUCT);
       for (Element product : products) {
         output.getResults().add(getProductInfo(product));
       }
       output.setTotal(generateTotal());
-      result = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(output);
-    } catch (JsonProcessingException e) {
-      System.err.println("\nJsonProcessingException occurred\n");
+      return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(output);
     } catch (IOException e) {
-      System.err.println("\nIOException occurred\n");
+      return e.getMessage();
     }
-    return result;
   }
 
   private Double getGross() {
@@ -86,15 +76,19 @@ public class ProductScraper {
     }
   }
 
-  private Product getProductInfo(Element product) throws IOException {
-    Document productDocument =
-        Jsoup.connect(product.getElementsByTag("a").first().attr("abs:href")).get();
-    return Product.builder()
-        .title(product.text())
-        .unitPrice(getUnitPrice(productDocument))
-        .description(getDescription(productDocument))
-        .kcal(energyHandler.handle(productDocument))
-        .build();
+  private Product getProductInfo(Element product) {
+    try {
+      Document productDocument =
+          Jsoup.connect(product.getElementsByTag("a").first().attr("abs:href")).get();
+      return Product.builder()
+          .title(product.text())
+          .unitPrice(getUnitPrice(productDocument))
+          .description(getDescription(productDocument))
+          .kcal(energyHandler.handle(productDocument))
+          .build();
+    } catch (IOException e) {
+      return null;
+    }
   }
 
 }
