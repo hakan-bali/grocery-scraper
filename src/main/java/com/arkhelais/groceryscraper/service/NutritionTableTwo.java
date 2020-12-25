@@ -1,6 +1,7 @@
 package com.arkhelais.groceryscraper.service;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 public class NutritionTableTwo implements EnergyHandler {
 
@@ -13,7 +14,14 @@ public class NutritionTableTwo implements EnergyHandler {
 
   @Override
   public Integer handle(Document nutritionTable) {
-    // TODO : Handle second type of Nutirion Table and extract KCAL value.
+    Elements elements = nutritionTable.getElementsByTag("td");
+    if (!elements.isEmpty() && elements.size() > 3) {
+      String energyText = elements.get(3).text();
+      int kcalIndex = energyText.indexOf("kcal");
+      if (kcalIndex > 0) {
+        return Integer.parseInt(energyText.substring(0, kcalIndex));
+      }
+    }
     if (next != null) {
       return next.handle(nutritionTable);
     }

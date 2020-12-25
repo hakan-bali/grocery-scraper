@@ -1,6 +1,7 @@
 package com.arkhelais.groceryscraper.service;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 public class NutritionTableOne implements EnergyHandler {
 
@@ -13,23 +14,18 @@ public class NutritionTableOne implements EnergyHandler {
 
   @Override
   public Integer handle(Document nutritionTable) {
-    String energyText = "";
-    Integer kcal = null;
-    int kcalIndex;
-
-    if (!nutritionTable.getElementsByTag("td").isEmpty()) {
-      energyText = nutritionTable.getElementsByTag("td").get(2).text();
-      kcalIndex = energyText.indexOf("kcal");
+    Elements elements = nutritionTable.getElementsByTag("td");
+    if (!elements.isEmpty() && elements.size() > 2) {
+      String energyText = elements.get(2).text();
+      int kcalIndex = energyText.indexOf("kcal");
       if (kcalIndex > 0) {
         return Integer.parseInt(energyText.substring(0, kcalIndex));
       }
     }
-
     if (next != null) {
       return next.handle(nutritionTable);
     }
-
-    return kcal;
+    return null;
   }
 
 }

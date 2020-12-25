@@ -24,10 +24,15 @@ public class ProductScraper {
   public ProductScraper() {
     output = Output.builder().results(new ArrayList<>()).build();
     energyHandler = new NutritionTableOne();
+
     EnergyHandler energyHandlerTwo = new NutritionTableTwo();
-    EnergyHandler energyHandlerThree = new NutritionTableThree();
     energyHandler.setNext(energyHandlerTwo);
+
+    EnergyHandler energyHandlerThree = new NutritionTableThree();
     energyHandlerTwo.setNext(energyHandlerThree);
+
+    EnergyHandler energyHandlerFour = new NutritionTableFour();
+    energyHandlerThree.setNext(energyHandlerFour);
   }
 
   public void setCategoryPageUrl(String categoryPageUrl) {
