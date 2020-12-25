@@ -17,11 +17,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class ProductScraper {
-  private final Output output = Output.builder().results(new ArrayList<>()).build();
-  private EnergyHandler energyHandler;
+  private final Output output;
+  private final EnergyHandler energyHandler;
   private String categoryPageUrl = DEFAULT_URL;
 
   public ProductScraper() {
+    output = Output.builder().results(new ArrayList<>()).build();
     energyHandler = new NutritionTableOne();
     EnergyHandler energyHandlerTwo = new NutritionTableTwo();
     EnergyHandler energyHandlerThree = new NutritionTableThree();
@@ -69,25 +70,31 @@ public class ProductScraper {
         .build();
   }
 
+  private Double getUnitPrice(Document product) {
+    try {
+      String priceRawText = product.getElementsByClass("pricePerUnit").text();
+      return Double.parseDouble(priceRawText.substring(1, priceRawText.indexOf("/")));
+    } catch (Exception e) {
+      return 0.0;
+    }
+  }
+
+  private String getDescription(Document product) {
+    try {
+      return product.getElementsByClass("productText").get(0).text();
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
   private Product getProductInfo(Element product) throws IOException {
-    Document docProd;
-    String priceRawText;
-    String priceText;
-    String productDescription;
-    Double price;
-
-    docProd = Jsoup.connect(product.getElementsByTag("a").first().attr("abs:href")).get();
-    priceRawText = docProd.getElementsByClass("pricePerUnit").text();
-    priceText = priceRawText.substring(1, priceRawText.indexOf("/"));
-    productDescription = docProd.getElementsByClass("productText").get(0).text();
-
-    price = Double.parseDouble(priceText);
-
+    Document productDocument =
+        Jsoup.connect(product.getElementsByTag("a").first().attr("abs:href")).get();
     return Product.builder()
         .title(product.text())
-        .unit_price(price)
-        .description(productDescription)
-        .kcal_per_100g(energyHandler.handle(docProd))
+        .unit_price(getUnitPrice(productDocument))
+        .description(getDescription(productDocument))
+        .kcal_per_100g(energyHandler.handle(productDocument))
         .build();
   }
 
