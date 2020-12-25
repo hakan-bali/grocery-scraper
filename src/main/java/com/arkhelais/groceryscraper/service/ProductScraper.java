@@ -58,8 +58,7 @@ public class ProductScraper {
   }
 
   private Double getVat(Double gross) {
-    Double vat = (gross * 100) / (100 + VAT);
-    return Double.parseDouble(String.format("%.2f", vat));
+    return (gross * VAT) / (100 + VAT);
   }
 
   private Total generateTotal() {
