@@ -22,7 +22,7 @@ public class ProductScraper {
   private String categoryPageUrl = DEFAULT_URL;
 
   public ProductScraper() {
-    EnergyHandler energyHandler = new NutritionTableOne();
+    energyHandler = new NutritionTableOne();
     EnergyHandler energyHandlerTwo = new NutritionTableTwo();
     EnergyHandler energyHandlerThree = new NutritionTableThree();
     energyHandler.setNext(energyHandlerTwo);
