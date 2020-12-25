@@ -24,15 +24,10 @@ public class ProductScraper {
   public ProductScraper() {
     output = Output.builder().results(new ArrayList<>()).build();
     energyHandler = new NutritionTableOne();
-
     EnergyHandler energyHandlerTwo = new NutritionTableTwo();
     energyHandler.setNext(energyHandlerTwo);
-
     EnergyHandler energyHandlerThree = new NutritionTableThree();
     energyHandlerTwo.setNext(energyHandlerThree);
-
-    EnergyHandler energyHandlerFour = new NutritionTableFour();
-    energyHandlerThree.setNext(energyHandlerFour);
   }
 
   public void setCategoryPageUrl(String categoryPageUrl) {
@@ -58,7 +53,7 @@ public class ProductScraper {
 
   private Double getGross() {
     return output.getResults().stream()
-        .map(Product::getUnit_price)
+        .map(Product::getUnitPrice)
         .reduce(0.0, Double::sum);
   }
 
@@ -97,9 +92,9 @@ public class ProductScraper {
         Jsoup.connect(product.getElementsByTag("a").first().attr("abs:href")).get();
     return Product.builder()
         .title(product.text())
-        .unit_price(getUnitPrice(productDocument))
+        .unitPrice(getUnitPrice(productDocument))
         .description(getDescription(productDocument))
-        .kcal_per_100g(energyHandler.handle(productDocument))
+        .kcal(energyHandler.handle(productDocument))
         .build();
   }
 
