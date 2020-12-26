@@ -15,6 +15,7 @@ public class Total {
 
   @JsonSerialize(using = CustomDoubleSerializer.class)
   private Double gross;
+
   @JsonSerialize(using = CustomDoubleSerializer.class)
   private Double vat;
 

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class Output {
 
   private ArrayList<Product> results;
+
   private Total total;
 
 }
