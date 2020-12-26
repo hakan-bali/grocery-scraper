@@ -1,5 +1,8 @@
 package com.arkhelais.groceryscraper.service;
 
+import static com.arkhelais.groceryscraper.util.Constants.KCAL_INDEX_3;
+
+import java.util.Optional;
 import org.jsoup.select.Elements;
 
 public class NutritionTableThree implements EnergyHandler {
@@ -12,7 +15,8 @@ public class NutritionTableThree implements EnergyHandler {
 
   @Override
   public Integer handle(Elements elements) {
-    return callNext(next, elements);
+    return Optional.ofNullable(getKcalWithoutLabel(elements, KCAL_INDEX_3))
+        .orElseGet( () -> callNext(next, elements));
   }
 
 }
