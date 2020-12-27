@@ -3,6 +3,7 @@ package com.arkhelais.groceryscraper.service;
 import static com.arkhelais.groceryscraper.util.TestConstants.KCAL_TEST_INPUT1_1;
 import static com.arkhelais.groceryscraper.util.TestConstants.KCAL_TEST_INPUT1_2;
 import static com.arkhelais.groceryscraper.util.TestConstants.KCAL_TEST_INPUT1_3;
+import static com.arkhelais.groceryscraper.util.TestConstants.KCAL_TEST_OUTPUT1;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.jsoup.Jsoup;
@@ -30,7 +31,7 @@ class NutritionTableOneTest {
   void givenKcalValueWhenHandleThenResultIsOk() {
     final Elements elements = Jsoup.parse(KCAL_TEST_INPUT1_1).getElementsByTag("td");
     Integer result = nutritionTableOne.handle(elements);
-    assertEquals(33, result);
+    assertEquals(KCAL_TEST_OUTPUT1, result);
   }
 
   @Test
@@ -45,6 +46,18 @@ class NutritionTableOneTest {
     final Elements elements = Jsoup.parse(KCAL_TEST_INPUT1_3).getElementsByTag("td");
     Integer result = nutritionTableOne.handle(elements);
     assertNull(result);
+  }
+
+  @Test
+  void givenKcalValueWhenEnergyHandlersOrderChangedThenResultIsOk() {
+    final NutritionTableThree nutritionTableThree =
+        new NutritionTableThree(
+            new NutritionTableTwo(
+                new NutritionTableOne(null)));
+
+    final Elements elements = Jsoup.parse(KCAL_TEST_INPUT1_1).getElementsByTag("td");
+    Integer result = nutritionTableOne.handle(elements);
+    assertEquals(KCAL_TEST_OUTPUT1, result);
   }
 
 }
