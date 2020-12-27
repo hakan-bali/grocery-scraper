@@ -1,7 +1,17 @@
 package com.arkhelais.groceryscraper.service;
 
+import static com.arkhelais.groceryscraper.util.Constants.ATTR_HREF;
+import static com.arkhelais.groceryscraper.util.Constants.CSS_PRICE;
 import static com.arkhelais.groceryscraper.util.Constants.CSS_PRODUCT;
+import static com.arkhelais.groceryscraper.util.Constants.CSS_PRODUCT_SUB_PAGE;
+import static com.arkhelais.groceryscraper.util.Constants.DEFAULT_OUTPUT_FILE;
 import static com.arkhelais.groceryscraper.util.Constants.DEFAULT_URL;
+import static com.arkhelais.groceryscraper.util.Constants.MESSAGE_ALREADY_EXIST;
+import static com.arkhelais.groceryscraper.util.Constants.MESSAGE_DIRECTORY;
+import static com.arkhelais.groceryscraper.util.Constants.MESSAGE_NO_PRODUCT;
+import static com.arkhelais.groceryscraper.util.Constants.MESSAGE_SAVED_TO;
+import static com.arkhelais.groceryscraper.util.Constants.TAG_A;
+import static com.arkhelais.groceryscraper.util.Constants.TAG_TD;
 import static com.arkhelais.groceryscraper.util.Constants.VAT;
 
 import com.arkhelais.groceryscraper.dto.Output;
@@ -91,7 +101,7 @@ public class ProductScraper implements Runnable {
     boolean outputToFile = outFile;
 
     if (fileName == null) {
-      fileName = "output.json";
+      fileName = DEFAULT_OUTPUT_FILE;
     } else {
       outputToFile = true;
     }
@@ -108,7 +118,7 @@ public class ProductScraper implements Runnable {
         output.setTotal(generateTotal());
       }
       return output.getResults().isEmpty()
-          ? "No product was found"
+          ? MESSAGE_NO_PRODUCT
           : new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(output);
     } catch (Exception e) {
       return e.getMessage();
@@ -118,8 +128,8 @@ public class ProductScraper implements Runnable {
   private Product getProductInfo(Element product) {
     try {
       Document productDocument =
-          Jsoup.connect(product.getElementsByTag("a").first().attr("abs:href")).get();
-      Elements elements = productDocument.getElementsByTag("td");
+          Jsoup.connect(product.getElementsByTag(TAG_A).first().attr(ATTR_HREF)).get();
+      Elements elements = productDocument.getElementsByTag(TAG_TD);
       return Product.builder()
           .title(product.text())
           .unitPrice(getUnitPrice(productDocument))
@@ -133,7 +143,7 @@ public class ProductScraper implements Runnable {
 
   private Double getUnitPrice(Document product) {
     try {
-      String priceRawText = product.getElementsByClass("pricePerUnit").text();
+      String priceRawText = product.getElementsByClass(CSS_PRICE).text();
       return Double.parseDouble(priceRawText.substring(1, priceRawText.indexOf("/")));
     } catch (Exception e) {
       return 0.0;
@@ -142,7 +152,7 @@ public class ProductScraper implements Runnable {
 
   private String getDescription(Document product) {
     try {
-      return product.getElementsByClass("productText").get(0).text();
+      return product.getElementsByClass(CSS_PRODUCT_SUB_PAGE).get(0).text();
     } catch (Exception e) {
       return "";
     }
@@ -171,7 +181,7 @@ public class ProductScraper implements Runnable {
     if (processFileRemoval(path)) {
       try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
         bufferedWriter.write(output);
-        System.out.println("JSon output saved to " + fileName);
+        System.out.println(MESSAGE_SAVED_TO + fileName);
       } catch (IOException e) {
         System.out.println(e.getMessage());
       }
@@ -181,10 +191,10 @@ public class ProductScraper implements Runnable {
   @SneakyThrows(IOException.class)
   private boolean processFileRemoval(Path path) {
     if (Files.isDirectory(path)) {
-      System.out.println(fileName + " is a directory");
+      System.out.println(fileName + MESSAGE_DIRECTORY);
       return false;
     }
-    if (fileName.equals("output.json")) {
+    if (fileName.equals(DEFAULT_OUTPUT_FILE)) {
       removeFile = true;
     }
     if (removeFile) {
@@ -195,7 +205,7 @@ public class ProductScraper implements Runnable {
       }
     } else {
       if (Files.exists(path)) {
-        System.out.println(fileName + " already exists");
+        System.out.println(fileName + MESSAGE_ALREADY_EXIST);
         return false;
       }
       return true;
