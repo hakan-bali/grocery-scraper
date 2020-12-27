@@ -28,24 +28,24 @@ $ ./gradlew run
 ```
 ### Clean build whole project from command line
 ```
-./gradlew clean build
+$ ./gradlew clean build
 ```
 
 ### Check that it is running
 ```
-./gradlew run
+$ ./gradlew run
 ```
 
 ### Running unit tests from command line
 ```
-./gradlew test
+$ ./gradlew test
 ```
 
 ### Command line options
 
 #### Usage:
 ```
-./gradlew run --args='[-cfhVx] [-n FILENAME]' 
+$ ./gradlew run --args='[-cfhVx] [-n FILENAME]' 
 ```
 #### Options:
 ```
