@@ -53,6 +53,10 @@ public class ProductScraper implements Runnable {
       description = "Given <FILENAME> is used instead of default 'output.json'.")
   String fileName;
 
+  @Option(names = "-u", paramLabel = "SOURCE_URL",
+      description = "Given <SOURCE_URL> is used instead of default one given in the task description.")
+  String productsUrl;
+
   public ProductScraper() {
     output = Output.builder().results(new ArrayList<>()).build();
     energyHandler =
@@ -63,7 +67,9 @@ public class ProductScraper implements Runnable {
 
   @Override
   public void run() {
-    String productsAsJson = extractProductsAsJson();
+    String productsAsJson = (productsUrl == null) ?
+        extractProductsAsJson(DEFAULT_URL) :
+        extractProductsAsJson(productsUrl);
 
     if (isOutputToConsole()) {
       System.out.println(productsAsJson);
@@ -92,17 +98,19 @@ public class ProductScraper implements Runnable {
     return outputToFile;
   }
 
-  public String extractProductsAsJson() {
+  public String extractProductsAsJson(String url) {
     try {
-      Elements products = Jsoup.connect(DEFAULT_URL).get().getElementsByClass(CSS_PRODUCT);
+      Elements products = Jsoup.connect(url).get().getElementsByClass(CSS_PRODUCT);
       if (!products.isEmpty()) {
         for (Element product : products) {
           output.getResults().add(getProductInfo(product));
         }
         output.setTotal(generateTotal());
       }
-      return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(output);
-    } catch (IOException e) {
+      return output.getResults().isEmpty()
+          ? "No product was found"
+          : new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(output);
+    } catch (Exception e) {
       return e.getMessage();
     }
   }
