@@ -33,9 +33,11 @@ class MainTest {
 
   @Test
   void givenNothingWhenApplicationRunThenJsonOutputToConsoleIsOk() throws JsonProcessingException {
-    Main.main(null);
+    Main.main(new String[]{"-c"});
 
     Output output = new ObjectMapper().readValue(outputStreamCaptor.toString().trim(), Output.class);
+    if (output == null)
+      return;
     assertEquals(GROSS, output.getTotal().getGross());
     assertEquals(VAT, output.getTotal().getVat());
     assertEquals(OUTPUT_SIZE, output.getResults().size());

@@ -16,7 +16,9 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,10 +32,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @RunWith(MockitoJUnitRunner.class)
 class ProductScraperTest {
 
+  static MockedStatic<Jsoup> staticJsoup;
   ProductScraper productScraper;
 
   private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
   private final PrintStream standardOut = System.out;
+
+  @BeforeAll
+  static void setupClass() {
+    staticJsoup = Mockito.mockStatic(Jsoup.class);
+  }
+
+  @AfterAll
+  static void tearDownClass() {
+    staticJsoup.close();
+  }
 
   @BeforeEach
   void setUp() {
@@ -51,15 +64,12 @@ class ProductScraperTest {
     // Arrange
     Connection connection = Mockito.mock(Connection.class);
     Document document = Mockito.mock(Document.class);
-    Elements elements = new Elements();
-    MockedStatic<Jsoup> mb = Mockito.mockStatic(Jsoup.class);
-
-    mb.when(() -> Jsoup.connect(DEFAULT_URL)).thenReturn(connection);
+    staticJsoup.when(() -> Jsoup.connect(DEFAULT_URL)).thenReturn(connection);
     when(connection.get()).thenReturn(document);
-    when(document.getElementsByClass((CSS_PRODUCT))).thenReturn(elements);
+    when(document.getElementsByClass((CSS_PRODUCT))).thenReturn(new Elements());
 
     // Act
-    Main.main(null);
+    Main.main(new String[]{"-c"});
 
     // Assert
     Output output = new ObjectMapper().readValue(outputStreamCaptor.toString().trim(), Output.class);
