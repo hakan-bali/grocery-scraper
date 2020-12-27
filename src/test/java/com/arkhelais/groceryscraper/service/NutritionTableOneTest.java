@@ -56,7 +56,7 @@ class NutritionTableOneTest {
                 new NutritionTableOne(null)));
 
     final Elements elements = Jsoup.parse(KCAL_TEST_INPUT1_1).getElementsByTag("td");
-    Integer result = nutritionTableOne.handle(elements);
+    Integer result = nutritionTableThree.handle(elements);
     assertEquals(KCAL_TEST_OUTPUT1, result);
   }
 

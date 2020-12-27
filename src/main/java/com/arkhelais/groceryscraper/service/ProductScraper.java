@@ -149,7 +149,9 @@ public class ProductScraper implements Runnable {
 
     if (removeFile || fileName.equals("output.json")) {
       if (targetFile.isFile()) {
-        targetFile.delete();
+        if (!targetFile.delete()) {
+          System.out.println(fileName + " cannot be deleted");
+        }
       } else {
         System.out.println(fileName + " is a directory");
       }
