@@ -49,10 +49,10 @@ $ ./gradlew run --args='[-cfhVx] [-n FILENAME]'
 ```
 #### Options:
 ```
--c              JSon output will be redirected to Console. Can be used with the '-f' option.
+-c              JSon output will be redirected to console. Can be used with the '-f' option.
 ```
 ```
--f              JSon output will be redirected to File 'output.json'. Can be used with the '-c' option.
+-f              JSon output will be redirected to 'output.json' file. Can be used with the '-c' option.
 ```
 ```
 -h, --help      Show this help message and exit.
@@ -65,4 +65,29 @@ $ ./gradlew run --args='[-cfhVx] [-n FILENAME]'
 ```
 ```
 -x              Output file is removed before output is saved.
+```
+#### Examples:
+JSon output will be redirected to console only.
+```
+$ ./gradlew run --args='-c' 
+```
+JSon output will be redirected to 'output.json' file only.
+```
+$ ./gradlew run --args='-f' 
+```
+JSon output will be redirected to both console and 'output.json' file. 'output.json' file is removed if already exists.
+```
+$ ./gradlew run --args='-cf' 
+```
+JSon output will be redirected to 'MyOut.JSon' file only.
+```
+$ ./gradlew run --args='-nMyOut.JSon' 
+```
+JSon output will be redirected to both console and 'GroceryOut.json' file. If 'GroceryOut.json' already exists, output will be redirected to console only.
+```
+$ ./gradlew run --args='-cfn GroceryOut.json' 
+```
+JSon output will be redirected to both console and 'GroceryOut.json' file. If 'GroceryOut.json' already exists, it is removed first.
+```
+$ ./gradlew run --args='-cfxn GroceryOut.json' 
 ```
