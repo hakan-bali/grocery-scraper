@@ -8,16 +8,48 @@ import com.arkhelais.groceryscraper.dto.Output;
 import com.arkhelais.groceryscraper.dto.Product;
 import com.arkhelais.groceryscraper.dto.Total;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
-public class ProductScraper {
+@Command(name="./gradlew run --args='...'",
+    separator = " ",
+    headerHeading = "%nUsage:",
+    synopsisHeading = "%n",
+    commandListHeading = "%nCommands:%n",
+    descriptionHeading = "%nDescription:%n",
+    parameterListHeading = "%nParameters:%n",
+    optionListHeading = "%nOptions:%n",
+    mixinStandardHelpOptions = true,
+    version = "Grocery Scraper version:1.0-SNAPSHOT",
+    description = "Grocery Scraper for Sainsbury’s Groceries website.")
+public class ProductScraper implements Runnable {
   private final Output output;
   private final EnergyHandler energyHandler;
+
+  @Option(names = "-c",
+      description = "JSon output will be redirected to Console.")
+  boolean outConsole;
+
+  @Option(names = "-f",
+      description = "JSon output will be redirected to File ('output.json').")
+  boolean outFile;
+
+  @Option(names = "-x")
+  boolean removeFile;
+
+  @Option(names = "-n", paramLabel = "FILENAME",
+      description = "Given <FILENAME> is used instead of default ('output.json').")
+  String fileName;
 
   public ProductScraper() {
     output = Output.builder().results(new ArrayList<>()).build();
@@ -90,6 +122,55 @@ public class ProductScraper {
           .build();
     } catch (IOException e) {
       return null;
+    }
+  }
+
+  boolean isOutputToConsole() {
+    if (!outConsole && !outFile && fileName == null)
+      return true;
+    else
+      return outConsole;
+  }
+
+  boolean isOutputToFile() {
+    boolean outputToFile = outFile;
+
+    if (fileName == null) {
+      fileName = "output.json";
+    } else {
+      outputToFile = true;
+    }
+    return outputToFile;
+  }
+
+  private void saveOutputToFile(String output) {
+    File targetFile = new File(fileName);
+
+    if (removeFile || fileName.equals("output.json")) {
+      if (targetFile.isFile()) {
+        targetFile.delete();
+      }
+    }
+
+    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName)))
+    {
+      writer.write(output);
+      System.out.println("JSon output saved to " + fileName);
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
+  @Override
+  public void run() {
+    String output = extractProductsAsJson();
+
+    if (isOutputToConsole()) {
+      System.out.println(output);
+    }
+
+    if (isOutputToFile()) {
+      saveOutputToFile(output);
     }
   }
 
