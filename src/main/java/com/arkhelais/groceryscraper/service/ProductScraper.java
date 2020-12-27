@@ -146,27 +146,34 @@ public class ProductScraper implements Runnable {
   }
 
   @SneakyThrows(IOException.class)
-  private void saveOutputToFile(String output) {
-    Path path = Paths.get(fileName);
-
+  private boolean processFileRemoval(Path path) {
     if (removeFile || fileName.equals("output.json")) {
       if (Files.isDirectory(path)) {
         System.out.println(fileName + " is a directory");
+        return false;
       } else {
         if (Files.deleteIfExists(path)) {
           System.out.println(fileName + " cannot be deleted");
+          return false;
         }
       }
     }
+    return true;
+  }
 
-    if (Files.exists(path)) {
-      System.out.println(fileName + " already exists");
-    } else {
-      try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
-        bufferedWriter.write(output);
-        System.out.println("JSon output saved to " + fileName);
-      } catch (IOException e) {
-        System.out.println(e.getMessage());
+  private void saveOutputToFile(String output) {
+    Path path = Paths.get(fileName);
+
+    if (processFileRemoval(path)) {
+      if (Files.exists(path)) {
+        System.out.println(fileName + " already exists");
+      } else {
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
+          bufferedWriter.write(output);
+          System.out.println("JSon output saved to " + fileName);
+        } catch (IOException e) {
+          System.out.println(e.getMessage());
+        }
       }
     }
   }
