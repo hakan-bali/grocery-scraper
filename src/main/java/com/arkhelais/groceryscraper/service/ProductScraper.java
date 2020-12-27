@@ -44,7 +44,8 @@ public class ProductScraper implements Runnable {
       description = "JSon output will be redirected to File ('output.json').")
   boolean outFile;
 
-  @Option(names = "-x")
+  @Option(names = "-x",
+      description = "Output file is removed before output is saved.")
   boolean removeFile;
 
   @Option(names = "-n", paramLabel = "FILENAME",
@@ -149,15 +150,21 @@ public class ProductScraper implements Runnable {
     if (removeFile || fileName.equals("output.json")) {
       if (targetFile.isFile()) {
         targetFile.delete();
+      } else {
+        System.out.println(fileName + " is a directory");
       }
     }
 
-    try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName)))
-    {
-      writer.write(output);
-      System.out.println("JSon output saved to " + fileName);
-    } catch (IOException e) {
-      System.out.println(e.getMessage());
+    if (targetFile.exists()) {
+      System.out.println(fileName + " already exists");
+    } else {
+      try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(fileName))) {
+        bufferedWriter.write(output);
+        bufferedWriter.close();
+        System.out.println("JSon output saved to " + fileName);
+      } catch (IOException e) {
+        System.out.println(e.getMessage());
+      }
     }
   }
 
