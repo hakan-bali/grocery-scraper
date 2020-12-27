@@ -9,11 +9,12 @@ import com.arkhelais.groceryscraper.dto.Product;
 import com.arkhelais.groceryscraper.dto.Total;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import lombok.SneakyThrows;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,7 +22,7 @@ import org.jsoup.select.Elements;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(name="./gradlew run --args='...'",
+@Command(name="\"./gradlew run\" OR \"./gradlew run --args='options in brackets'\"",
     separator = " ",
     headerHeading = "%nUsage:",
     synopsisHeading = "%n",
@@ -144,25 +145,25 @@ public class ProductScraper implements Runnable {
     return outputToFile;
   }
 
+  @SneakyThrows(IOException.class)
   private void saveOutputToFile(String output) {
-    File targetFile = new File(fileName);
+    Path path = Paths.get(fileName);
 
     if (removeFile || fileName.equals("output.json")) {
-      if (targetFile.isFile()) {
-        if (!targetFile.delete()) {
+      if (Files.isDirectory(path)) {
+        System.out.println(fileName + " is a directory");
+      } else {
+        if (Files.deleteIfExists(path)) {
           System.out.println(fileName + " cannot be deleted");
         }
-      } else {
-        System.out.println(fileName + " is a directory");
       }
     }
 
-    if (targetFile.exists()) {
+    if (Files.exists(path)) {
       System.out.println(fileName + " already exists");
     } else {
-      try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(fileName))) {
+      try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
         bufferedWriter.write(output);
-        bufferedWriter.close();
         System.out.println("JSon output saved to " + fileName);
       } catch (IOException e) {
         System.out.println(e.getMessage());
@@ -172,14 +173,14 @@ public class ProductScraper implements Runnable {
 
   @Override
   public void run() {
-    String output = extractProductsAsJson();
+    String productsAsJson = extractProductsAsJson();
 
     if (isOutputToConsole()) {
-      System.out.println(output);
+      System.out.println(productsAsJson);
     }
 
     if (isOutputToFile()) {
-      saveOutputToFile(output);
+      saveOutputToFile(productsAsJson);
     }
   }
 
