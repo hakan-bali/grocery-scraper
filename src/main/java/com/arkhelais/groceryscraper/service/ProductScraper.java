@@ -21,20 +21,21 @@ public class ProductScraper {
 
   public ProductScraper() {
     output = Output.builder().results(new ArrayList<>()).build();
-    energyHandler = new NutritionTableOne();
-    EnergyHandler energyHandlerTwo = new NutritionTableTwo();
-    energyHandler.setNext(energyHandlerTwo);
-    EnergyHandler energyHandlerThree = new NutritionTableThree();
-    energyHandlerTwo.setNext(energyHandlerThree);
+    energyHandler =
+        new NutritionTableOne(
+            new NutritionTableTwo(
+                new NutritionTableThree(null)));
   }
 
   public String extractProductsAsJson() {
     try {
       Elements products = Jsoup.connect(DEFAULT_URL).get().getElementsByClass(CSS_PRODUCT);
-      for (Element product : products) {
-        output.getResults().add(getProductInfo(product));
+      if (!products.isEmpty()) {
+        for (Element product : products) {
+          output.getResults().add(getProductInfo(product));
+        }
+        output.setTotal(generateTotal());
       }
-      output.setTotal(generateTotal());
       return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(output);
     } catch (IOException e) {
       return e.getMessage();
@@ -80,11 +81,12 @@ public class ProductScraper {
     try {
       Document productDocument =
           Jsoup.connect(product.getElementsByTag("a").first().attr("abs:href")).get();
+      Elements elements = productDocument.getElementsByTag("td");
       return Product.builder()
           .title(product.text())
           .unitPrice(getUnitPrice(productDocument))
           .description(getDescription(productDocument))
-          .kcal(energyHandler.handle(productDocument))
+          .kcal(energyHandler.handle(elements))
           .build();
     } catch (IOException e) {
       return null;
