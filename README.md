@@ -45,7 +45,7 @@ $ ./gradlew test
 
 #### Usage:
 ```
-$ ./gradlew run --args='[-cfhVx] [-n FILENAME]' 
+$ ./gradlew run --args='[-cfhVx] [-n FILENAME] [-u SOURCE_URL]' 
 ```
 #### Options:
 ```
@@ -59,6 +59,9 @@ $ ./gradlew run --args='[-cfhVx] [-n FILENAME]'
 ```
 ```
 -n  FILENAME    Given <FILENAME> is used instead of default 'output.json'.
+```
+```
+-u  SOURCE_URL  Given <SOURCE_URL> is used instead of default one given in the task description.
 ```
 ```
 -V, --version   Print version information and exit.
