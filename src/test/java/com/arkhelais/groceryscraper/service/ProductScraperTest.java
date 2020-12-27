@@ -2,6 +2,7 @@ package com.arkhelais.groceryscraper.service;
 
 import static com.arkhelais.groceryscraper.util.Constants.CSS_PRODUCT;
 import static com.arkhelais.groceryscraper.util.Constants.DEFAULT_URL;
+import static com.arkhelais.groceryscraper.util.Constants.MESSAGE_NO_PRODUCT;
 import static com.arkhelais.groceryscraper.util.TestConstants.OUTPUT_SIZE_EMPTY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -33,7 +34,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ProductScraperTest {
 
   static MockedStatic<Jsoup> staticJsoup;
-  ProductScraper productScraper;
 
   private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
   private final PrintStream standardOut = System.out;
@@ -51,7 +51,6 @@ class ProductScraperTest {
   @BeforeEach
   void setUp() {
     System.setOut(new PrintStream(outputStreamCaptor));
-    productScraper = new ProductScraper();
   }
 
   @AfterEach
@@ -72,8 +71,7 @@ class ProductScraperTest {
     Main.main(new String[]{"-c"});
 
     // Assert
-    Output output = new ObjectMapper().readValue(outputStreamCaptor.toString().trim(), Output.class);
-    assertEquals(OUTPUT_SIZE_EMPTY, output.getResults().size());
+    assertTrue(outputStreamCaptor.toString().contains(MESSAGE_NO_PRODUCT));
   }
 
 }

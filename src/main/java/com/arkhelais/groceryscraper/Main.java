@@ -1,12 +1,12 @@
 package com.arkhelais.groceryscraper;
 
-import com.arkhelais.groceryscraper.service.ProductScraper;
+import com.arkhelais.groceryscraper.service.ConsoleService;
 import picocli.CommandLine;
 
 public class Main {
 
   public static void main(String[] args) {
-    CommandLine commandLine = new CommandLine(new ProductScraper());
+    CommandLine commandLine = new CommandLine(new ConsoleService());
     commandLine.execute(args);
   }
 
