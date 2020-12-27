@@ -32,7 +32,7 @@ class MainTest {
   }
 
   @Test
-  void main() throws JsonProcessingException {
+  void givenNothingWhenApplicationRunThenJsonOutputToConsoleIsOk() throws JsonProcessingException {
     Main.main(null);
 
     Output output = new ObjectMapper().readValue(outputStreamCaptor.toString().trim(), Output.class);
