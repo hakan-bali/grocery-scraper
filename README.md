@@ -49,16 +49,16 @@ $ ./gradlew run --args='[-cfhVx] [-n FILENAME]'
 ```
 #### Options:
 ```
--c              JSon output will be redirected to Console.
+-c              JSon output will be redirected to Console. Can be used with the '-f' option.
 ```
 ```
--f              JSon output will be redirected to File ('output.json').
+-f              JSon output will be redirected to File 'output.json'. Can be used with the '-c' option.
 ```
 ```
 -h, --help      Show this help message and exit.
 ```
 ```
--n  FILENAME    Given <FILENAME> is used instead of default ('output.json').
+-n  FILENAME    Given <FILENAME> is used instead of default 'output.json'.
 ```
 ```
 -V, --version   Print version information and exit.

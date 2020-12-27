@@ -38,11 +38,11 @@ public class ProductScraper implements Runnable {
   private final EnergyHandler energyHandler;
 
   @Option(names = "-c",
-      description = "JSon output will be redirected to Console.")
+      description = "JSon output will be redirected to Console. Can be used with the '-f' option.")
   boolean outConsole;
 
   @Option(names = "-f",
-      description = "JSon output will be redirected to File ('output.json').")
+      description = "JSon output will be redirected to File 'output.json'. Can be used with the '-c' option.")
   boolean outFile;
 
   @Option(names = "-x",
@@ -50,7 +50,7 @@ public class ProductScraper implements Runnable {
   boolean removeFile;
 
   @Option(names = "-n", paramLabel = "FILENAME",
-      description = "Given <FILENAME> is used instead of default ('output.json').")
+      description = "Given <FILENAME> is used instead of default 'output.json'.")
   String fileName;
 
   public ProductScraper() {
