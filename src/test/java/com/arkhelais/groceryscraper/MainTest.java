@@ -46,4 +46,10 @@ class MainTest {
     assertNull(output.getResults().get(16).getKcal());
   }
 
+  @Test
+  void givenNothingWhenApplicationRunThenJsonOutputToFileIsOk() throws JsonProcessingException {
+    Main.main(new String[]{"-f"});
+    assertEquals("JSon output saved to output.json", outputStreamCaptor.toString().trim());
+  }
+
 }

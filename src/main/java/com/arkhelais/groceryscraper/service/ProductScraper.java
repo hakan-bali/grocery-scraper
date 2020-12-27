@@ -61,69 +61,16 @@ public class ProductScraper implements Runnable {
                 new NutritionTableThree(null)));
   }
 
-  public String extractProductsAsJson() {
-    try {
-      Elements products = Jsoup.connect(DEFAULT_URL).get().getElementsByClass(CSS_PRODUCT);
-      if (!products.isEmpty()) {
-        for (Element product : products) {
-          output.getResults().add(getProductInfo(product));
-        }
-        output.setTotal(generateTotal());
-      }
-      return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(output);
-    } catch (IOException e) {
-      return e.getMessage();
+  @Override
+  public void run() {
+    String productsAsJson = extractProductsAsJson();
+
+    if (isOutputToConsole()) {
+      System.out.println(productsAsJson);
     }
-  }
 
-  private Double getGross() {
-    return output.getResults().stream()
-        .map(Product::getUnitPrice)
-        .reduce(0.0, Double::sum);
-  }
-
-  private Double getVat(Double gross) {
-    return (gross * VAT) / (100 + VAT);
-  }
-
-  private Total generateTotal() {
-    Double gross = getGross();
-    return Total.builder()
-        .gross(gross)
-        .vat(getVat(gross))
-        .build();
-  }
-
-  private Double getUnitPrice(Document product) {
-    try {
-      String priceRawText = product.getElementsByClass("pricePerUnit").text();
-      return Double.parseDouble(priceRawText.substring(1, priceRawText.indexOf("/")));
-    } catch (Exception e) {
-      return 0.0;
-    }
-  }
-
-  private String getDescription(Document product) {
-    try {
-      return product.getElementsByClass("productText").get(0).text();
-    } catch (Exception e) {
-      return "";
-    }
-  }
-
-  private Product getProductInfo(Element product) {
-    try {
-      Document productDocument =
-          Jsoup.connect(product.getElementsByTag("a").first().attr("abs:href")).get();
-      Elements elements = productDocument.getElementsByTag("td");
-      return Product.builder()
-          .title(product.text())
-          .unitPrice(getUnitPrice(productDocument))
-          .description(getDescription(productDocument))
-          .kcal(energyHandler.handle(elements))
-          .build();
-    } catch (IOException e) {
-      return null;
+    if (isOutputToFile()) {
+      saveOutputToFile(productsAsJson);
     }
   }
 
@@ -143,6 +90,84 @@ public class ProductScraper implements Runnable {
       outputToFile = true;
     }
     return outputToFile;
+  }
+
+  public String extractProductsAsJson() {
+    try {
+      Elements products = Jsoup.connect(DEFAULT_URL).get().getElementsByClass(CSS_PRODUCT);
+      if (!products.isEmpty()) {
+        for (Element product : products) {
+          output.getResults().add(getProductInfo(product));
+        }
+        output.setTotal(generateTotal());
+      }
+      return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(output);
+    } catch (IOException e) {
+      return e.getMessage();
+    }
+  }
+
+  private Product getProductInfo(Element product) {
+    try {
+      Document productDocument =
+          Jsoup.connect(product.getElementsByTag("a").first().attr("abs:href")).get();
+      Elements elements = productDocument.getElementsByTag("td");
+      return Product.builder()
+          .title(product.text())
+          .unitPrice(getUnitPrice(productDocument))
+          .description(getDescription(productDocument))
+          .kcal(energyHandler.handle(elements))
+          .build();
+    } catch (IOException e) {
+      return null;
+    }
+  }
+
+  private Double getUnitPrice(Document product) {
+    try {
+      String priceRawText = product.getElementsByClass("pricePerUnit").text();
+      return Double.parseDouble(priceRawText.substring(1, priceRawText.indexOf("/")));
+    } catch (Exception e) {
+      return 0.0;
+    }
+  }
+
+  private String getDescription(Document product) {
+    try {
+      return product.getElementsByClass("productText").get(0).text();
+    } catch (Exception e) {
+      return "";
+    }
+  }
+
+  private Total generateTotal() {
+    Double gross = getGross();
+    return Total.builder()
+        .gross(gross)
+        .vat(getVat(gross))
+        .build();
+  }
+
+  private Double getGross() {
+    return output.getResults().stream()
+        .map(Product::getUnitPrice)
+        .reduce(0.0, Double::sum);
+  }
+
+  private Double getVat(Double gross) {
+    return (gross * VAT) / (100 + VAT);
+  }
+
+  private void saveOutputToFile(String output) {
+    Path path = Paths.get(fileName);
+    if (processFileRemoval(path)) {
+      try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
+        bufferedWriter.write(output);
+        System.out.println("JSon output saved to " + fileName);
+      } catch (IOException e) {
+        System.out.println(e.getMessage());
+      }
+    }
   }
 
   @SneakyThrows(IOException.class)
@@ -166,31 +191,6 @@ public class ProductScraper implements Runnable {
         return false;
       }
       return true;
-    }
-  }
-
-  private void saveOutputToFile(String output) {
-    Path path = Paths.get(fileName);
-    if (processFileRemoval(path)) {
-      try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
-        bufferedWriter.write(output);
-        System.out.println("JSon output saved to " + fileName);
-      } catch (IOException e) {
-        System.out.println(e.getMessage());
-      }
-    }
-  }
-
-  @Override
-  public void run() {
-    String productsAsJson = extractProductsAsJson();
-
-    if (isOutputToConsole()) {
-      System.out.println(productsAsJson);
-    }
-
-    if (isOutputToFile()) {
-      saveOutputToFile(productsAsJson);
     }
   }
 
