@@ -5,13 +5,13 @@ import static com.arkhelais.groceryscraper.util.Constants.KCAL_LABEL;
 
 import org.jsoup.select.Elements;
 
-public interface EnergyHandler {
+public abstract class EnergyHandler {
 
-  default Integer callNext(EnergyHandler next, Elements elements) {
+  Integer callNext(EnergyHandler next, Elements elements) {
     return next == null ? KCAL_NULL : next.handle(elements);
   }
 
-  default Integer getKcalWithLabel(Elements elements, int index) {
+  Integer getKcalWithLabel(Elements elements, int index) {
     if (elements.size() > index) {
       String energyText = elements.get(index).text();
       if (energyText.contains(KCAL_LABEL))
@@ -20,7 +20,7 @@ public interface EnergyHandler {
     return KCAL_NULL;
   }
 
-  default Integer getKcalWithoutLabel(Elements elements, int index) {
+  Integer getKcalWithoutLabel(Elements elements, int index) {
     if (elements.isEmpty())
       return KCAL_NULL;
     try {
@@ -30,6 +30,6 @@ public interface EnergyHandler {
     }
   }
 
-  Integer handle(Elements elements);
+  abstract Integer handle(Elements elements);
 
 }

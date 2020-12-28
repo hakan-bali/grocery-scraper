@@ -3,13 +3,10 @@ package com.arkhelais.groceryscraper.service;
 import static com.arkhelais.groceryscraper.util.Constants.CSS_PRODUCT;
 import static com.arkhelais.groceryscraper.util.Constants.DEFAULT_URL;
 import static com.arkhelais.groceryscraper.util.Constants.MESSAGE_NO_PRODUCT;
-import static com.arkhelais.groceryscraper.util.TestConstants.OUTPUT_SIZE_EMPTY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import com.arkhelais.groceryscraper.Main;
-import com.arkhelais.groceryscraper.dto.Output;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -25,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.MockedStatic;
+import org.mockito.MockedStatic.Verification;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -63,7 +61,12 @@ class ProductScraperTest {
     // Arrange
     Connection connection = Mockito.mock(Connection.class);
     Document document = Mockito.mock(Document.class);
-    staticJsoup.when(() -> Jsoup.connect(DEFAULT_URL)).thenReturn(connection);
+    staticJsoup.when(new Verification() {
+      @Override
+      public void apply() throws Throwable {
+        Jsoup.connect(DEFAULT_URL);
+      }
+    }).thenReturn(connection);
     when(connection.get()).thenReturn(document);
     when(document.getElementsByClass((CSS_PRODUCT))).thenReturn(new Elements());
 

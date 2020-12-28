@@ -2,10 +2,9 @@ package com.arkhelais.groceryscraper.service;
 
 import static com.arkhelais.groceryscraper.util.Constants.KCAL_INDEX_3;
 
-import java.util.Optional;
 import org.jsoup.select.Elements;
 
-public class NutritionTableThree implements EnergyHandler {
+public class NutritionTableThree extends EnergyHandler {
 
   private final EnergyHandler next;
 
@@ -15,8 +14,13 @@ public class NutritionTableThree implements EnergyHandler {
 
   @Override
   public Integer handle(Elements elements) {
-    return Optional.ofNullable(getKcalWithoutLabel(elements, KCAL_INDEX_3))
-        .orElseGet( () -> callNext(next, elements));
+    Integer result = null;
+    Integer kcalWithoutLabel = getKcalWithoutLabel(elements, KCAL_INDEX_3);
+    if (kcalWithoutLabel != null)
+      result = kcalWithoutLabel;
+    if (result == null)
+      result = callNext(next, elements);
+    return result;
   }
 
 }

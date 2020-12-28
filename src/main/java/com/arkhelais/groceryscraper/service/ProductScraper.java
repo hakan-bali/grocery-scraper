@@ -21,7 +21,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class ProductScraper {
-  private static Output output = Output.builder().results(new ArrayList<>()).build();
+  private static Output output = Output.builder().results(new ArrayList<Product>()).build();
   private static final EnergyHandler energyHandler =
       new NutritionTableOne(
           new NutritionTableTwo(
@@ -31,7 +31,7 @@ public class ProductScraper {
   }
 
   public static String extractProductsAsJson(String url) {
-    output = Output.builder().results(new ArrayList<>()).build();
+    output = Output.builder().results(new ArrayList<Product>()).build();
     try {
       Elements products = Jsoup.connect(url).get().getElementsByClass(CSS_PRODUCT);
       if (!products.isEmpty()) {
@@ -76,6 +76,8 @@ public class ProductScraper {
 
   private static String getDescription(Document product) {
     try {
+      String s = product.getElementsByClass(CSS_PRODUCT_SUB_PAGE).get(0).html();
+
       return product.getElementsByClass(CSS_PRODUCT_SUB_PAGE).get(0).text();
     } catch (Exception e) {
       return "";
@@ -91,9 +93,12 @@ public class ProductScraper {
   }
 
   private static Double getGross() {
-    return output.getResults().stream()
-        .map(Product::getUnitPrice)
-        .reduce(0.0, Double::sum);
+    Double acc = 0.0;
+    for (Product product : output.getResults()) {
+      Double unitPrice = product.getUnitPrice();
+      acc = acc + unitPrice;
+    }
+    return acc;
   }
 
   private static Double getVat(Double gross) {
