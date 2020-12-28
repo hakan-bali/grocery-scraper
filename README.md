@@ -1,8 +1,8 @@
 # Overview
-
 This project has been developed with Java 1.7 source code compatibility due to the detailed explanation given below:
 https://jsainsburyplc.github.io/serverside-test/
------
+
+---
 ## Pre-requisites for the project
 [Install](https://www.oracle.com/uk/java/technologies/javase/javase8u211-later-archive-downloads.html) JDK version 1.8+
 
@@ -27,22 +27,26 @@ Gradle will download all required dependencies, build the project, and run the p
 ```
 $ ./gradlew run
 ```
+
 ---
 ### Clean build whole project from command line
 ```
 $ ./gradlew clean build
 ```
+
 ---
 ### Running unit tests from command line
 ```
 $ ./gradlew test
 ```
+
 ---
 ### Check that it is running
 ```
 $ ./gradlew run
 ```
------
+
+---
 ### Command line options
 
 #### Usage:
@@ -96,7 +100,7 @@ JSon output will be redirected to both console and 'GroceryOut.json' file. If 'G
 ```
 $ ./gradlew run --args='-cfxn GroceryOut.json' 
 ```
------
+---
 ### Requirements Compliance Matrix
 | # | Functional Requirements | Compliance |
 | --- | --- | --- |
@@ -121,8 +125,8 @@ $ ./gradlew run --args='-cfxn GroceryOut.json'
 | 1 | Code should be written in Java 1.7+ | Done |
 | 2 | Application will be tested on a Unix-based terminal and ran in Java 1.8 | Done |
 | 3 | The choice of tools, libraries and frameworks used to develop the application is left open. | Done |
------
 
+---
 ### Libraries Used to Develop the Application
 | Library Name | Version |
 | --- | --- |
