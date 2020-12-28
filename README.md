@@ -94,3 +94,27 @@ JSon output will be redirected to both console and 'GroceryOut.json' file. If 'G
 ```
 $ ./gradlew run --args='-cfxn GroceryOut.json' 
 ```
+### Requirements Compliance Matrix
+| # | Functional Requirements | Compliance |
+| --- | --- | --- |
+| 1 | Build a Java console application | Done |
+| 2 | Scrape the Sainsbury’s grocery site’s - Berries, Cherries, Currants page  | Done|
+| 3 | Return a JSON array of all the products on the page | Done |
+| 4 | Follow each product’s link to get the calories per 100g (in kcal). | Done |
+| 5 | Follow each product’s link to get the long description. | Done |
+| 6 | Each element in the JSON results array should contain "title", "unit_price", "kcal_per_100g" and "description" keys corresponding to items in the HTML. | Done |
+| 7 | Do not include cross sell items already available with the product. | Done |
+| 8 | Omit the kcal_per_100g field, if calories are unavailable. | Done |
+| 9 | If the description is spread over multiple lines, scrape only the first line. | Done: All lines scraped |
+| 10 | Show unit price and total up to 2 decimal places, representing pounds and whole pence. | Done |
+| 11 | Additionally, include a "total" field following the results in the JSon. | Done |
+| 12 | The "total" field contains two sub-fields: "gross" and "vat".  | Done |
+| 13 | The "gross" field will be the total price of all the items on the page. | Done |
+| 14 | The "vat" will be the VAT on the gross amount. | Done |
+| 15 | Every item has 20% VAT which is already included in the price. | Done |
+
+| # | Non-Functional Requirements | Compliance |
+| --- | --- | --- |
+| 1 | Code should be written in Java 1.7+ | Done |
+| 2 | Application will be tested on a Unix-based terminal and ran in Java 1.8 | Done |
+| 3 | The choice of tools, libraries and frameworks used to develop the application is left open. | Done |
