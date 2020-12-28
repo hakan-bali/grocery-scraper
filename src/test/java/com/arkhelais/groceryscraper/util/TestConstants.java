@@ -23,5 +23,6 @@ public class TestConstants {
   public static final String KCAL_TEST_INPUT3_2 = "<table><td>140kJ</td><td>-</td><td>%2</td><td>99kJ</td></table>";
   public static final String KCAL_TEST_INPUT3_3 = "<table><td>140kJ</td><td>-</td><td>%2</td></table>";
   public static final Integer KCAL_TEST_OUTPUT3 = 99;
+  public static final String TAG_TD = "td";
 
 }

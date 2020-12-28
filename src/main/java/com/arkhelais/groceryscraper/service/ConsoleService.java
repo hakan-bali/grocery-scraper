@@ -63,14 +63,14 @@ public class ConsoleService implements Runnable {
     }
   }
 
-  boolean isOutputToConsole() {
+  private boolean isOutputToConsole() {
     if (!outConsole && !outFile && fileName == null)
       return true;
     else
       return outConsole;
   }
 
-  boolean isOutputToFile() {
+  private boolean isOutputToFile() {
     boolean outputToFile = outFile;
 
     if (fileName == null) {
