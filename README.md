@@ -3,7 +3,7 @@ This project has been developed due to the detailed explanation given below:
 https://jsainsburyplc.github.io/serverside-test/
 
 ### Pre-requisites for the project
-[Install](https://www.oracle.com/uk/java/technologies/javase/jdk11-archive-downloads.html) JDK version 11.0.7
+[Install](https://www.oracle.com/uk/java/technologies/javase/javase8u211-later-archive-downloads.html) JDK version 1.8+
 
 [Install](https://gradle.org/install/) Gradle version 6.6
 
