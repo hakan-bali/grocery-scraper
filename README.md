@@ -1,17 +1,16 @@
-## Overview
+# Overview
 
 This project has been developed with Java 1.7 source code compatibility due to the detailed explanation given below:
 https://jsainsburyplc.github.io/serverside-test/
 -----
-
-### Pre-requisites for the project
+## Pre-requisites for the project
 [Install](https://www.oracle.com/uk/java/technologies/javase/javase8u211-later-archive-downloads.html) JDK version 1.8+
 
 [Install](https://gradle.org/install/) Gradle version 6.6
 
 [Install](https://git-scm.com/downloads) Git version 2.24.3
 
-### A fresh startup for the project
+## A fresh startup for the project
 Go to any directory you'd like to create the project.
 ```
 $ cd <ANY_DIRECTORY>
@@ -28,14 +27,17 @@ Gradle will download all required dependencies, build the project, and run the p
 ```
 $ ./gradlew run
 ```
+---
 ### Clean build whole project from command line
 ```
 $ ./gradlew clean build
 ```
+---
 ### Running unit tests from command line
 ```
 $ ./gradlew test
 ```
+---
 ### Check that it is running
 ```
 $ ./gradlew run
