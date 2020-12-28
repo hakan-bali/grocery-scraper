@@ -1,5 +1,6 @@
 package com.arkhelais.groceryscraper.service;
 
+import static com.arkhelais.groceryscraper.util.Constants.KCAL_INDEX_3;
 import static com.arkhelais.groceryscraper.util.Constants.KCAL_NULL;
 import static com.arkhelais.groceryscraper.util.Constants.KCAL_LABEL;
 
@@ -20,11 +21,11 @@ public abstract class EnergyHandler {
     return KCAL_NULL;
   }
 
-  Integer getKcalWithoutLabel(Elements elements, int index) {
+  Integer getKcalWithoutLabel(Elements elements) {
     if (elements.isEmpty())
       return KCAL_NULL;
     try {
-      return Integer.parseInt(elements.get(index).text());
+      return Integer.parseInt(elements.get(KCAL_INDEX_3).text());
     } catch (Exception e) {
       return KCAL_NULL;
     }

@@ -76,8 +76,6 @@ public class ProductScraper {
 
   private static String getDescription(Document product) {
     try {
-      String s = product.getElementsByClass(CSS_PRODUCT_SUB_PAGE).get(0).html();
-
       return product.getElementsByClass(CSS_PRODUCT_SUB_PAGE).get(0).text();
     } catch (Exception e) {
       return "";
@@ -93,7 +91,7 @@ public class ProductScraper {
   }
 
   private static Double getGross() {
-    Double acc = 0.0;
+    double acc = 0.0;
     for (Product product : output.getResults()) {
       Double unitPrice = product.getUnitPrice();
       acc = acc + unitPrice;

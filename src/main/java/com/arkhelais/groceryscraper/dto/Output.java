@@ -1,6 +1,6 @@
 package com.arkhelais.groceryscraper.dto;
 
-import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Output {
 
-  private ArrayList<Product> results;
+  private List<Product> results;
 
   private Total total;
 

@@ -1,7 +1,5 @@
 package com.arkhelais.groceryscraper.service;
 
-import static com.arkhelais.groceryscraper.util.Constants.KCAL_INDEX_3;
-
 import org.jsoup.select.Elements;
 
 public class NutritionTableThree extends EnergyHandler {
@@ -15,7 +13,7 @@ public class NutritionTableThree extends EnergyHandler {
   @Override
   public Integer handle(Elements elements) {
     Integer result = null;
-    Integer kcalWithoutLabel = getKcalWithoutLabel(elements, KCAL_INDEX_3);
+    Integer kcalWithoutLabel = getKcalWithoutLabel(elements);
     if (kcalWithoutLabel != null)
       result = kcalWithoutLabel;
     if (result == null)

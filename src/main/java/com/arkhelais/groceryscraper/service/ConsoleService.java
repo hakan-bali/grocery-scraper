@@ -7,6 +7,7 @@ import static com.arkhelais.groceryscraper.util.Constants.MESSAGE_DIRECTORY;
 import static com.arkhelais.groceryscraper.util.Constants.MESSAGE_SAVED_TO;
 
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -82,9 +83,9 @@ public class ConsoleService implements Runnable {
   }
 
   private void saveOutputToFile(String output) {
-    Path path = Paths.get(fileName);
-    if (processFileRemoval(path)) {
-      try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)) {
+    if (processFileRemoval()) {
+      try {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
         bufferedWriter.write(output);
         System.out.println(MESSAGE_SAVED_TO + fileName);
       } catch (IOException e) {
@@ -94,7 +95,8 @@ public class ConsoleService implements Runnable {
   }
 
   @SneakyThrows(IOException.class)
-  private boolean processFileRemoval(Path path) {
+  private boolean processFileRemoval() {
+    Path path = Paths.get(fileName);
     if (Files.isDirectory(path)) {
       System.out.println(fileName + MESSAGE_DIRECTORY);
       return false;
