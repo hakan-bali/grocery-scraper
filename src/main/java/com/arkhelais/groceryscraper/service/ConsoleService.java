@@ -51,9 +51,12 @@ public class ConsoleService implements Runnable {
 
   @Override
   public void run() {
-    String productsAsJson = (productsUrl == null) ?
-        ProductScraper.extractProductsAsJson(DEFAULT_URL) :
-        ProductScraper.extractProductsAsJson(productsUrl);
+    String productsAsJson;
+    if (productsUrl == null) {
+      productsAsJson = ProductScraper.extractProductsAsJson(DEFAULT_URL);
+    } else {
+      productsAsJson = ProductScraper.extractProductsAsJson(productsUrl);
+    }
 
     if (isOutputToConsole()) {
       System.out.println(productsAsJson);
@@ -87,6 +90,7 @@ public class ConsoleService implements Runnable {
       try {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
         bufferedWriter.write(output);
+        bufferedWriter.close();
         System.out.println(MESSAGE_SAVED_TO + fileName);
       } catch (IOException e) {
         System.out.println(e.getMessage());
