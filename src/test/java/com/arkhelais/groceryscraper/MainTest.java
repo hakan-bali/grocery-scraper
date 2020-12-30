@@ -47,7 +47,7 @@ class MainTest {
   }
 
   @Test
-  void givenNothingWhenApplicationRunThenJsonOutputToFileIsOk() throws JsonProcessingException {
+  void givenNothingWhenApplicationRunThenJsonOutputToFileIsOk() {
     Main.main(new String[]{"-f"});
     assertEquals("JSon output saved to output.json", outputStreamCaptor.toString().trim());
   }

@@ -63,7 +63,7 @@ class ProductScraperTest {
     Document document = Mockito.mock(Document.class);
     staticJsoup.when(new Verification() {
       @Override
-      public void apply() throws Throwable {
+      public void apply() {
         Jsoup.connect(DEFAULT_URL);
       }
     }).thenReturn(connection);
