@@ -10,6 +10,18 @@ https://jsainsburyplc.github.io/serverside-test/
 
 [Install](https://git-scm.com/downloads) Git version 2.24.3
 
+---
+## Libraries Used to Develop the Application
+| Library Name | Version |
+| --- | --- |
+| Jackson for JSon serialization | [2.12](https://github.com/FasterXML/jackson-core) |
+| JSoup for web scraping | [1.13.1](https://jsoup.org/) |
+| JUnit5 for unit testing | [5.7.0](https://junit.org/junit5/) |
+| Lombok for boilerplate code generation | [1.18.16](https://projectlombok.org/) |
+| Mockito for unit test mocking | [3.6.28](https://site.mockito.org/) |
+| PicoCli for command line interface | [4.5.2](https://picocli.info/) |
+
+---
 ## A fresh startup for the project
 Go to any directory you'd like to create the project.
 ```
@@ -125,14 +137,3 @@ $ ./gradlew run --args='-cfxn GroceryOut.json'
 | 1 | Code should be written in Java 1.7+ | Done |
 | 2 | Application will be tested on a Unix-based terminal and ran in Java 1.8 | Done |
 | 3 | The choice of tools, libraries and frameworks used to develop the application is left open. | Done |
-
----
-### Libraries Used to Develop the Application
-| Library Name | Version |
-| --- | --- |
-| Jackson for JSon serialization | [2.12](https://github.com/FasterXML/jackson-core) |
-| JSoup for web scraping | [1.13.1](https://jsoup.org/) |
-| JUnit5 for unit testing | [5.7.0](https://junit.org/junit5/) |
-| Lombok for boilerplate code generation | [1.18.16](https://projectlombok.org/) |
-| Mockito for unit test mocking | [3.6.28](https://site.mockito.org/) |
-| PicoCli for command line interface | [4.5.2](https://picocli.info/) |
